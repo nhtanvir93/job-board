@@ -2,9 +2,10 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 export const env = createEnv({
-  createFinalSchema: env => {
-    return z.object(env).transform(values => {
-      const {DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, ...rest} = values;
+  createFinalSchema: (env) => {
+    return z.object(env).transform((values) => {
+      const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, ...rest } =
+        values;
 
       return {
         ...rest,

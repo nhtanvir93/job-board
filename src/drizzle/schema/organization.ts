@@ -6,14 +6,17 @@ import { JobListingTable } from "./jobListing";
 import { OrganizationUserSettingsTable } from "./organizationUserSettings";
 
 export const OrganizationTable = pgTable("organizations", {
-    createdAt,
-    id: varchar().primaryKey(),
-    imageUrl: varchar(),
-    name: varchar().notNull(),
-    updatedAt,
+  createdAt,
+  id: varchar().primaryKey(),
+  imageUrl: varchar(),
+  name: varchar().notNull(),
+  updatedAt,
 });
 
-export const organizationRelations = relations(OrganizationTable, ({many}) => ({
+export const organizationRelations = relations(
+  OrganizationTable,
+  ({ many }) => ({
     jobListings: many(JobListingTable),
     organizationUserSettings: many(OrganizationUserSettingsTable),
-}));
+  }),
+);
