@@ -16,6 +16,7 @@ export const env = createEnv({
   emptyStringAsUndefined: true,
   experimental__runtimeEnv: process.env,
   server: {
+    CLERK_SECRET_KEY: z.string().min(1),
     DB_HOST: z.string().min(1),
     DB_NAME: z.string().min(1),
     DB_PASSWORD: z.string().min(1),
