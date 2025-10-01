@@ -73,7 +73,7 @@ function UserInfo({ name, email, imageUrl }: UserProfile) {
     .join("");
 
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row gap-2 items-center">
       <Avatar className="rounded-lg size-8">
         <AvatarImage src={imageUrl} />
         <AvatarFallback className="uppercase bg-primary text-primary-foreground">
