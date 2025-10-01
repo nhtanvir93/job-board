@@ -17,3 +17,9 @@ export async function updateUser(
 export async function deleteUser(id: string) {
   await db.delete(UserTable).where(eq(UserTable.id, id));
 }
+
+export async function findUserById(id: string) {
+  return db.query.UserTable.findFirst({
+    where: eq(UserTable.id, id),
+  });
+}

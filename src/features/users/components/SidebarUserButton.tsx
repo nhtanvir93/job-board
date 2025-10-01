@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 
+import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
+
 import { SidebarUserButtonClient } from "./_SidebarUserButtonClient";
 
 export default function SidebarUserButton() {
@@ -11,12 +13,16 @@ export default function SidebarUserButton() {
 }
 
 async function SidebarUserSuspense() {
+  const user = await getCurrentUser();
+
+  if (!user) return <p>No loggedin User found</p>;
+
   return (
     <SidebarUserButtonClient
       user={{
-        email: "mohammed.tanvir447@gmail.com",
-        imageUrl: "",
-        name: "Mohammed Tanvir",
+        email: user.email,
+        imageUrl: user.imageUrl,
+        name: user.name,
       }}
     />
   );
