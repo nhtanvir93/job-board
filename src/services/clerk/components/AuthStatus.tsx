@@ -7,7 +7,7 @@ import { ReactNode, Suspense } from "react";
 export function SignedIn({ children }: { children: ReactNode }) {
   return (
     <Suspense>
-      <ClerkSignedOut>{children}</ClerkSignedOut>
+      <ClerkSignedIn>{children}</ClerkSignedIn>
     </Suspense>
   );
 }
@@ -15,7 +15,7 @@ export function SignedIn({ children }: { children: ReactNode }) {
 export function SignedOut({ children }: { children: ReactNode }) {
   return (
     <Suspense>
-      <ClerkSignedIn>{children}</ClerkSignedIn>
+      <ClerkSignedOut>{children}</ClerkSignedOut>
     </Suspense>
   );
 }
