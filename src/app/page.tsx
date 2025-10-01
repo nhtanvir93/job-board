@@ -21,11 +21,7 @@ const HomePage = () => {
             <SidebarTrigger />
             <span className="text-xl text-nowrap">Job Board</span>
           </SidebarHeader>
-          <SidebarContent className="flex-1 overflow-y-auto">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore,
-            eaque quae. Neque totam minima aliquid a eius dolor voluptatum
-            exercitationem.
-          </SidebarContent>
+          <SidebarContent className="flex-1 overflow-y-auto"></SidebarContent>
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>

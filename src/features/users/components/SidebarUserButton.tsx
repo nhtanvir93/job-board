@@ -14,7 +14,7 @@ async function SidebarUserSuspense() {
   return (
     <SidebarUserButtonClient
       user={{
-        email: "tanvir.eatl@gmail.com",
+        email: "mohammed.tanvir447@gmail.com",
         imageUrl: "",
         name: "Mohammed Tanvir",
       }}

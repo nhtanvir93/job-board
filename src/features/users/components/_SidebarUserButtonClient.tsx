@@ -17,8 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SidebarMenuButton } from "@/components/ui/sidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 
 interface UserProfile {
   name: string;
@@ -27,7 +26,7 @@ interface UserProfile {
 }
 
 export function SidebarUserButtonClient({ user }: { user: UserProfile }) {
-  const isMobile = useIsMobile();
+  const { isMobile, setOpenMobile } = useSidebar();
   const { openUserProfile } = useClerk();
 
   return (
@@ -51,7 +50,12 @@ export function SidebarUserButtonClient({ user }: { user: UserProfile }) {
           <UserInfo {...user} />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => openUserProfile()}>
+        <DropdownMenuItem
+          onClick={() => {
+            openUserProfile();
+            setOpenMobile(false);
+          }}
+        >
           <UserIcon className="mr-1" /> Profile
         </DropdownMenuItem>
         <DropdownMenuItem>
