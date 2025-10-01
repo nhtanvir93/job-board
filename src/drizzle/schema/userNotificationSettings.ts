@@ -13,7 +13,7 @@ export const UserNotificationSettingsTable = pgTable(
     updatedAt,
     userId: varchar()
       .primaryKey()
-      .references(() => UserTable.id),
+      .references(() => UserTable.id, { onDelete: "cascade" }),
   },
 );
 
