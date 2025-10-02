@@ -61,7 +61,9 @@ export function SidebarUserButtonClient({ user }: { user: UserProfile }) {
         <DropdownMenuItem>
           <SettingsIcon className="mr-1" /> Settings
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={async () => await signOut({redirectUrl: "/"})}>
+        <DropdownMenuItem
+          onClick={async () => await signOut({ redirectUrl: "/" })}
+        >
           <LogOutIcon className="mr-1" /> Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
