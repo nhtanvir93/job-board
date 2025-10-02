@@ -1,35 +1,52 @@
-import { LogInIcon } from "lucide-react";
-import Link from "next/link";
+import {
+  BrainCircuitIcon,
+  ClipboardListIcon,
+  LayoutDashboardIcon,
+  LogInIcon,
+} from "lucide-react";
 import { ReactNode } from "react";
 
 import AppSidebar from "@/components/sidebar/AppSidebar";
-import {
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
+import { SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
 import SidebarUserButton from "@/features/users/components/SidebarUserButton";
-import { SignedOut } from "@/services/clerk/components/AuthStatus";
 
 const JobSeekerLayout = ({ children }: { children: ReactNode }) => {
   return (
     <AppSidebar
       content={
-        <SidebarGroup>
-          <SidebarMenu>
-            <SignedOut>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/sign-in">
-                    <LogInIcon className="mr-1" />
-                    <span>Log In</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SignedOut>
-          </SidebarMenu>
-        </SidebarGroup>
+        <>
+          <SidebarGroup>
+            <SidebarGroupLabel>Job Listings</SidebarGroupLabel>
+          </SidebarGroup>
+          <SidebarNavMenuGroup
+            items={[
+              {
+                href: "/",
+                icon: <ClipboardListIcon />,
+                label: "Job Board",
+              },
+              {
+                href: "/ai-search",
+                icon: <BrainCircuitIcon />,
+                label: "AI Search",
+              },
+              {
+                authStatus: "signedIn",
+                href: "/employer",
+                icon: <LayoutDashboardIcon />,
+                label: "Employer Dashboard",
+              },
+              {
+                authStatus: "signedOut",
+                href: "/sign-in",
+                icon: <LogInIcon />,
+                label: "Log In",
+              },
+            ]}
+            className="mt-auto"
+          />
+        </>
       }
       footerButton={<SidebarUserButton />}
     >

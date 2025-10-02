@@ -4,22 +4,28 @@ import { Suspense } from "react";
 
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { SignedOut } from "@/services/clerk/components/AuthStatus";
-import { getCurrentUser } from "@/services/clerk/lib/getCurrentAuth";
+import {
+  getCurrentOrganization,
+  getCurrentUser,
+} from "@/services/clerk/lib/getCurrentAuth";
 
-import { SidebarUserButtonClient } from "./_SidebarUserButtonClient";
+import { SidebarOrganizationButtonClient } from "./_SidebarOrganizationButtonClient";
 
-export default function SidebarUserButton() {
+export default function SidebarOrganizationButton() {
   return (
     <Suspense>
-      <SidebarUserSuspense />
+      <SidebarOrganizationSuspense />
     </Suspense>
   );
 }
 
-async function SidebarUserSuspense() {
-  const user = await getCurrentUser();
+async function SidebarOrganizationSuspense() {
+  const [organization, user] = await Promise.all([
+    getCurrentOrganization(),
+    getCurrentUser(),
+  ]);
 
-  if (!user) {
+  if (!organization || !user) {
     return (
       <SignedOut>
         <SidebarMenuButton asChild>
@@ -33,12 +39,6 @@ async function SidebarUserSuspense() {
   }
 
   return (
-    <SidebarUserButtonClient
-      user={{
-        email: user.email,
-        imageUrl: user.imageUrl,
-        name: user.name,
-      }}
-    />
+    <SidebarOrganizationButtonClient user={user} organization={organization} />
   );
 }
