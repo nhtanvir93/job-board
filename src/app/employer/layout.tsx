@@ -9,7 +9,7 @@ import {
   SidebarGroupAction,
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
-import SidebarUserButton from "@/features/users/components/SidebarUserButton";
+import SidebarOrganizationButton from "@/features/organizations/components/SidebarOrganizationButton";
 
 const EmployerLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -43,7 +43,7 @@ const EmployerLayout = ({ children }: { children: ReactNode }) => {
           />
         </>
       }
-      footerButton={<SidebarUserButton />}
+      footerButton={<SidebarOrganizationButton />}
     >
       {children}
     </AppSidebar>
