@@ -27,7 +27,7 @@ interface UserProfile {
 
 export function SidebarUserButtonClient({ user }: { user: UserProfile }) {
   const { isMobile, setOpenMobile } = useSidebar();
-  const { openUserProfile } = useClerk();
+  const { openUserProfile, signOut } = useClerk();
 
   return (
     <DropdownMenu>
@@ -61,7 +61,7 @@ export function SidebarUserButtonClient({ user }: { user: UserProfile }) {
         <DropdownMenuItem>
           <SettingsIcon className="mr-1" /> Settings
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={async () => await signOut({redirectUrl: "/"})}>
           <LogOutIcon className="mr-1" /> Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
