@@ -1,6 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
 
-import { findOrganizationById } from "@/features/organizations/db/organizations";
 import { findUserById } from "@/features/users/db/users";
 
 export async function getCurrentUser() {
@@ -14,5 +13,11 @@ export async function getCurrentOrganization() {
   const { orgId } = await auth();
   if (!orgId) return null;
 
-  return findOrganizationById(orgId);
+  return {
+    imageUrl:
+      "https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png",
+    name: "Disco IT",
+  };
+
+  // return findOrganizationById(orgId);
 }

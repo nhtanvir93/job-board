@@ -1,6 +1,7 @@
 import { ClipboardListIcon, LogInIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { redirect } from "next/navigation";
+import { ReactNode, Suspense } from "react";
 
 import AppSidebar from "@/components/sidebar/AppSidebar";
 import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
@@ -10,8 +11,24 @@ import {
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import SidebarOrganizationButton from "@/features/organizations/components/SidebarOrganizationButton";
+import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
 
 const EmployerLayout = ({ children }: { children: ReactNode }) => {
+  return (
+    <Suspense>
+      <EmployerLayoutSuspense>{children}</EmployerLayoutSuspense>
+    </Suspense>
+  );
+};
+
+const EmployerLayoutSuspense = async ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
+  const organization = await getCurrentOrganization();
+  if (!organization) return redirect("/organizations/select");
+
   return (
     <AppSidebar
       content={
