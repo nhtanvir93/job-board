@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 
-import { findUserById } from "@/features/db/users";
+import { findUserById } from "@/features/users/db/users";
 
 export async function getCurrentUser() {
   const { userId } = await auth();

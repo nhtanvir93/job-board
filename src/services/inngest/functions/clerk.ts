@@ -2,8 +2,8 @@ import { NonRetriableError } from "inngest";
 import { Webhook } from "svix";
 
 import { env } from "@/data/env/server";
-import { insertUserNotificationSettings } from "@/features/db/userNotificationSettings";
-import { deleteUser, insertUser, updateUser } from "@/features/db/users";
+import { insertUserNotificationSettings } from "@/features/users/db/userNotificationSettings";
+import { deleteUser, insertUser, updateUser } from "@/features/users/db/users";
 
 import { inngest } from "../client";
 
