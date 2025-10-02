@@ -17,9 +17,11 @@ export const OrganizationUserSettingsTable = pgTable(
     createdAt,
     minimumRating: integer(),
     newApplicationEmailNotifications: boolean().notNull().default(false),
-    organizationId: varchar().references(() => OrganizationTable.id),
+    organizationId: varchar().references(() => OrganizationTable.id, {
+      onDelete: "cascade",
+    }),
     updatedAt,
-    userId: varchar().references(() => UserTable.id),
+    userId: varchar().references(() => UserTable.id, { onDelete: "cascade" }),
   },
   (table) => [primaryKey({ columns: [table.userId, table.organizationId] })],
 );

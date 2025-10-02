@@ -82,7 +82,7 @@ export function SidebarOrganizationButtonClient({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/organization/select">
+          <Link href="/organizations/select">
             <ArrowLeftRightIcon className="mr-1" /> Switch Organization
           </Link>
         </DropdownMenuItem>

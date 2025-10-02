@@ -15,6 +15,13 @@
       "when": 1759334340190,
       "tag": "0001_funny_silk_fever",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759435984905,
+      "tag": "0002_mushy_jetstream",
+      "breakpoints": true
     }
   ]
 }

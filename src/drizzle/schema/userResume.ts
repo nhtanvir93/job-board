@@ -12,7 +12,7 @@ export const UserResumeTable = pgTable("user_resumes", {
   updatedAt,
   userId: varchar()
     .primaryKey()
-    .references(() => UserTable.id),
+    .references(() => UserTable.id, { onDelete: "cascade" }),
 });
 
 export const userResumeRelations = relations(UserResumeTable, ({ one }) => ({
