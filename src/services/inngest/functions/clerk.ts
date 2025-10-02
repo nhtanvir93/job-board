@@ -2,6 +2,11 @@ import { NonRetriableError } from "inngest";
 import { Webhook } from "svix";
 
 import { env } from "@/data/env/server";
+import {
+  deleteOrganization,
+  insertOrganization,
+  updateOrganization,
+} from "@/features/organizations/db/organizations";
 import { insertUserNotificationSettings } from "@/features/users/db/userNotificationSettings";
 import { deleteUser, insertUser, updateUser } from "@/features/users/db/users";
 
@@ -126,6 +131,95 @@ export const clerkDeleteUser = inngest.createFunction(
       }
 
       await deleteUser(id);
+    });
+  },
+);
+
+export const clerkCreateOrganization = inngest.createFunction(
+  {
+    id: "clerk/create-db-organization",
+    name: "Clerk - Create DB Organization",
+  },
+  {
+    event: "clerk/organization.created",
+  },
+  async ({ event, step }) => {
+    await step.run("verify-webhook", async () => {
+      try {
+        verifyWebhook(event.data);
+      } catch {
+        throw new NonRetriableError("Invalid webhook");
+      }
+    });
+
+    await step.run("create-organization", async () => {
+      const organizationData = event.data.data;
+
+      await insertOrganization({
+        createdAt: new Date(organizationData.created_at),
+        id: organizationData.id,
+        imageUrl: organizationData.image_url,
+        name: organizationData.name,
+        updatedAt: new Date(organizationData.updated_at),
+      });
+    });
+  },
+);
+
+export const clerkUpdateOrganization = inngest.createFunction(
+  {
+    id: "clerk/update-db-organization",
+    name: "Clerk - Update DB Organization",
+  },
+  {
+    event: "clerk/organization.updated",
+  },
+  async ({ event, step }) => {
+    await step.run("verify-webhook", async () => {
+      try {
+        verifyWebhook(event.data);
+      } catch {
+        throw new NonRetriableError("Invalid webhook");
+      }
+    });
+
+    await step.run("update-organization", async () => {
+      const organizationData = event.data.data;
+
+      await updateOrganization(organizationData.id, {
+        imageUrl: organizationData.image_url,
+        name: organizationData.name,
+        updatedAt: new Date(organizationData.updated_at),
+      });
+    });
+  },
+);
+
+export const clerkDeleteOrganization = inngest.createFunction(
+  {
+    id: "clerk/delete-db-organization",
+    name: "Clerk - Delete DB Organization",
+  },
+  {
+    event: "clerk/organization.deleted",
+  },
+  async ({ event, step }) => {
+    await step.run("verify-webhook", async () => {
+      try {
+        verifyWebhook(event.data);
+      } catch {
+        throw new NonRetriableError("Invalid webhook");
+      }
+    });
+
+    await step.run("delete-organization", async () => {
+      const { id } = event.data.data;
+
+      if (!id) {
+        throw new NonRetriableError("No id found");
+      }
+
+      await deleteOrganization(id);
     });
   },
 );
