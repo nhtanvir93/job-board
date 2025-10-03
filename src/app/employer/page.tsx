@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-import { getMostRecentJobListingId } from "@/features/organizations/jobListings/db/jobListings";
+import { getMostRecentJobListingId } from "@/features/jobListings/db/jobListings";
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
 
 const EmployerHomePage = () => {

@@ -15,28 +15,28 @@ import { JobListingApplicationTable } from "./jobListingApplication";
 import { OrganizationTable } from "./organization";
 
 export const wageIntervals = ["hourly", "yearly"] as const;
-type WageInterval = (typeof wageIntervals)[number];
+export type WageInterval = (typeof wageIntervals)[number];
 export const wageIntervalEnum = pgEnum(
   "job_listings_wage_interval",
   wageIntervals,
 );
 
 export const locationRequirements = ["in-office", "hybrid", "remote"] as const;
-type LocationRequirement = (typeof locationRequirements)[number];
+export type LocationRequirement = (typeof locationRequirements)[number];
 export const locationRequirementEnum = pgEnum(
   "job_listings_location_requirement",
   locationRequirements,
 );
 
 export const experienceLevels = ["junior", "mid-level", "senior"] as const;
-type ExperienceLevel = (typeof experienceLevels)[number];
+export type ExperienceLevel = (typeof experienceLevels)[number];
 export const experienceLevelEnum = pgEnum(
   "job_listings_experience_level",
   experienceLevels,
 );
 
 export const jobListingStatuses = ["draft", "published", "delisted"] as const;
-type JobListingStatus = (typeof jobListingStatuses)[number];
+export type JobListingStatus = (typeof jobListingStatuses)[number];
 export const jobListingStatusEnum = pgEnum(
   "job_listings_status",
   jobListingStatuses,
@@ -47,7 +47,7 @@ export const jobListingTypes = [
   "part-time",
   "full-time",
 ] as const;
-type JobListingType = (typeof jobListingTypes)[number];
+export type JobListingType = (typeof jobListingTypes)[number];
 export const jobListingTypeEnum = pgEnum("job_listings_type", jobListingTypes);
 
 export const JobListingTable = pgTable(
