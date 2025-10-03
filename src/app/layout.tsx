@@ -1,3 +1,4 @@
+import '@mdxeditor/editor/style.css';
 import "./globals.css";
 
 import type * as next from "next";

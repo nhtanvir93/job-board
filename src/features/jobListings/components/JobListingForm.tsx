@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
+import { MarkdownEditor } from "@/components/markdown/MarkdownEditor";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,10 +22,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { locationRequirements, wageIntervals } from "@/drizzle/schema";
+import {
+  experienceLevels,
+  jobListingTypes,
+  locationRequirements,
+  wageIntervals,
+} from "@/drizzle/schema";
 
 import { jobListingSchema } from "../actions/schema";
 import {
+  formatExperienceLevel,
+  formatJobListingType,
   formatLocationRequirement,
   formatWageInterval,
 } from "../lib/formatters";
@@ -79,7 +88,7 @@ const JobListingForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Wage <span className="text-red-500">*</span>
+                  Wage
                 </FormLabel>
                 <div className="flex">
                   <FormControl>
@@ -218,6 +227,83 @@ const JobListingForm = () => {
             )}
           />
         </div>
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-x-4 gap-y-6 items-start">
+          <FormField
+            name="type"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Job Type <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {jobListingTypes.map((jobListingType) => (
+                        <SelectItem key={jobListingType} value={jobListingType}>
+                          {formatJobListingType(jobListingType)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="experienceLevel"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Experience Level <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {experienceLevels.map((experienceLevel) => (
+                        <SelectItem
+                          key={experienceLevel}
+                          value={experienceLevel}
+                        >
+                          {formatExperienceLevel(experienceLevel)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <FormField
+            name="description"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Description <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <MarkdownEditor {...field} markdown={field.value} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button disabled={form.formState.isSubmitting} type="submit" className="w-full">
+            Create Job Listing
+          </Button>
       </form>
     </Form>
   );
