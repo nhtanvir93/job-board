@@ -63,7 +63,9 @@ const JobListingForm = () => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Job Title</FormLabel>
+                <FormLabel>
+                  Job Title <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -76,7 +78,9 @@ const JobListingForm = () => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Wage</FormLabel>
+                <FormLabel>
+                  Wage <span className="text-red-500">*</span>
+                </FormLabel>
                 <div className="flex">
                   <FormControl>
                     <Input
@@ -189,7 +193,9 @@ const JobListingForm = () => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Location Requirement</FormLabel>
+                <FormLabel>
+                  Location Requirement <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="w-full">
