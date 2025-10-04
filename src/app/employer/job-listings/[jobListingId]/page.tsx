@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import { Badge } from "@/components/ui/badge";
+import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
 import { findJobListing } from "@/features/jobListings/db/jobListings";
+import { formatJobListingStatus } from "@/features/jobListings/lib/formatters";
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
 
 interface Props {
@@ -26,11 +29,10 @@ const JobListingPageSuspense = async ({ params }: Props) => {
 
   return (
     <div className="space-y-6 max-w-6xl max-auto p-4 @container @max-4xl:flex-col @max-4xl:items-start">
-      <h1 className="text-2xl font-bold tracking-tight">
-        {jobListing.title}
-      </h1>
+      <h1 className="text-2xl font-bold tracking-tight">{jobListing.title}</h1>
       <div className="flex flex-wrap gap-2 mt-2">
-        
+        <Badge>{formatJobListingStatus(jobListing.status)}</Badge>
+        <JobListingBadges jobListing={jobListing} />
       </div>
     </div>
   );
