@@ -54,6 +54,16 @@ const JobListingBadges = ({
 
   return (
     <>
+      {!isFeatured && (
+        <Badge
+          {...badgeProps}
+          className={cn(
+            "border-featured bg-featured/50 text-featured-foreground",
+          )}
+        >
+          Featured
+        </Badge>
+      )}
       {wage !== null && wageInterval !== null && (
         <Badge {...badgeProps}>
           <BanknoteIcon />

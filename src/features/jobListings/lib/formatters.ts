@@ -106,8 +106,9 @@ export function formatJobListingLocation({
   const locationParts = [];
 
   if (city !== null) locationParts.push(city);
-  if (stateAbbreviation !== null)
+  if (stateAbbreviation !== null) {
     locationParts.push(stateAbbreviation.toUpperCase());
+  }
 
   return locationParts.join(", ");
 }
