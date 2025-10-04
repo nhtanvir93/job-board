@@ -77,7 +77,9 @@ const JobListingForm = ({
   });
 
   const handleSubmit = async (data: z.infer<typeof jobListingSchema>) => {
-    const action = jobListing ? updateJobListing.bind(null, jobListing.id) : createJobListing;
+    const action = jobListing
+      ? updateJobListing.bind(null, jobListing.id)
+      : createJobListing;
     const res = await action(data);
 
     if (res.error) {
