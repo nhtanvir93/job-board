@@ -1,8 +1,9 @@
-import '@mdxeditor/editor/style.css';
+import "@mdxeditor/editor/style.css";
 import "./globals.css";
 
 import type * as next from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 
 import ClerkProvider from "@/services/clerk/components/ClerkProvider";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <Toaster />
           {children}
         </body>
       </html>

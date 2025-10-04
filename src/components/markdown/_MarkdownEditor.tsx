@@ -15,14 +15,14 @@ import {
   quotePlugin,
   tablePlugin,
   thematicBreakPlugin,
-  toolbarPlugin
+  toolbarPlugin,
 } from "@mdxeditor/editor";
 import type { ForwardedRef } from "react";
 
 import useIsDarkMode from "@/hooks/useIsDarkMode";
 import { cn } from "@/lib/utils";
 
-export const markdownClassNames = 
+export const markdownClassNames =
   "max-w-none prose prose-neutral dark:prose-invert font-sans";
 
 export default function InitializedMDXEditor({
@@ -50,8 +50,8 @@ export default function InitializedMDXEditor({
               <InsertThematicBreak />
               <InsertTable />
             </>
-          )
-        })
+          ),
+        }),
       ]}
       suppressHtmlProcessing
       {...props}

@@ -14,7 +14,8 @@ export function getJobListingOrganizationTag(organizationId: string) {
   return getOrganizationTag("jobListings", organizationId);
 }
 
-export function revalidateJobListingCache(id: string) {
+export function revalidateJobListingCache(id: string, organizationId: string) {
   revalidateTag(getJobListingGlobalTag());
   revalidateTag(getJobListingIdTag(id));
+  revalidateTag(getJobListingOrganizationTag(organizationId));
 }
