@@ -1,7 +1,12 @@
+import { EditIcon } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import { MarkdownPartial } from "@/components/markdown/MarkdownPartial";
+import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
 import { findJobListing } from "@/features/jobListings/db/jobListings";
 import { formatJobListingStatus } from "@/features/jobListings/lib/formatters";
@@ -34,6 +39,29 @@ const JobListingPageSuspense = async ({ params }: Props) => {
         <Badge>{formatJobListingStatus(jobListing.status)}</Badge>
         <JobListingBadges jobListing={jobListing} />
       </div>
+      <div className="flex items-center gap-2 empty:-mt-4">
+        <Button asChild variant="outline">
+          <Link href={`/employer/job-listings/${jobListing.id}/edit`}>
+            <EditIcon className="size-4" />
+            Edit
+          </Link>
+        </Button>
+      </div>
+      <MarkdownPartial
+        dialogMarkdown={
+          <MarkdownRenderer
+            className="prose-sm"
+            source={jobListing.description}
+          />
+        }
+        mainMarkdown={
+          <MarkdownRenderer
+            className="prose-sm"
+            source={jobListing.description}
+          />
+        }
+        dialogTitle="Description"
+      />
     </div>
   );
 };
