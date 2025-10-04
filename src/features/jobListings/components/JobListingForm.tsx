@@ -26,12 +26,13 @@ import {
 } from "@/components/ui/select";
 import {
   experienceLevels,
+  JobListingTable,
   jobListingTypes,
   locationRequirements,
   wageIntervals,
 } from "@/drizzle/schema";
 
-import { createJobListing } from "../actions/actions";
+import { createJobListing, updateJobListing } from "../actions/actions";
 import { jobListingSchema } from "../actions/schema";
 import {
   formatExperienceLevel,
@@ -43,9 +44,25 @@ import StateSelectItems from "./StateSelectItems";
 
 const NONE_SELECT_VALUE = "none";
 
-const JobListingForm = () => {
+const JobListingForm = ({
+  jobListing,
+}: {
+  jobListing?: Pick<
+    typeof JobListingTable.$inferSelect,
+    | "id"
+    | "title"
+    | "description"
+    | "wage"
+    | "wageInterval"
+    | "city"
+    | "stateAbbreviation"
+    | "locationRequirement"
+    | "type"
+    | "experienceLevel"
+  >;
+}) => {
   const form = useForm({
-    defaultValues: {
+    defaultValues: jobListing ?? {
       city: null,
       description: "",
       experienceLevel: "junior",
@@ -60,7 +77,8 @@ const JobListingForm = () => {
   });
 
   const handleSubmit = async (data: z.infer<typeof jobListingSchema>) => {
-    const res = await createJobListing(data);
+    const action = jobListing ? updateJobListing.bind(null, jobListing.id) : createJobListing;
+    const res = await action(data);
 
     if (res.error) {
       toast.error(res.message);
@@ -310,7 +328,7 @@ const JobListingForm = () => {
           className="w-full"
         >
           <LoadingSwap isLoading={form.formState.isSubmitting}>
-            Create Job Listing
+            {jobListing ? "Update" : "Create"} Job Listing
           </LoadingSwap>
         </Button>
       </form>

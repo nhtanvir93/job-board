@@ -37,6 +37,26 @@ export async function insertJobListing(
   return newJobListing;
 }
 
+export async function updateJobListing(
+  id: string,
+  jobListing: Partial<typeof JobListingTable.$inferInsert>,
+) {
+  const [updatedJobListing] = await db
+    .update(JobListingTable)
+    .set(jobListing)
+    .where(eq(JobListingTable.id, id))
+    .returning({
+      id: JobListingTable.id,
+      organizationId: JobListingTable.organizationId,
+    });
+  revalidateJobListingCache(
+    updatedJobListing.id,
+    updatedJobListing.organizationId,
+  );
+
+  return updatedJobListing;
+}
+
 export async function findJobListing(id: string, organizationId: string) {
   "use cache";
   cacheTag(getJobListingIdTag(id));
