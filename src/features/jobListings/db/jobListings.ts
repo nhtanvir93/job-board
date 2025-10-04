@@ -1,10 +1,11 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 import { db } from "@/drizzle/db";
 import { JobListingTable } from "@/drizzle/schema";
 
 import {
+  getJobListingIdTag,
   getJobListingOrganizationTag,
   revalidateJobListingCache,
 } from "./cache/jobListings";
@@ -34,4 +35,16 @@ export async function insertJobListing(
   revalidateJobListingCache(newJobListing.id, newJobListing.organizationId);
 
   return newJobListing;
+}
+
+export async function findJobListing(id: string, organizationId: string) {
+  "use cache";
+  cacheTag(getJobListingIdTag(id));
+
+  return db.query.JobListingTable.findFirst({
+    where: and(
+      eq(JobListingTable.id, id),
+      eq(JobListingTable.organizationId, organizationId),
+    ),
+  });
 }
