@@ -75,10 +75,12 @@ const JobListingPageSuspense = async ({ params }: Props) => {
           </Button>
         </AsyncIf>
         <StatusUpdateButton status={jobListing.status} id={jobListing.id} />
-        <FeaturedToggleButton
-          isFeatured={jobListing.isFeatured}
-          id={jobListing.id}
-        />
+        {jobListing.status === "published" && (
+          <FeaturedToggleButton
+            isFeatured={jobListing.isFeatured}
+            id={jobListing.id}
+          />
+        )}
       </div>
       <MarkdownPartial
         dialogMarkdown={
