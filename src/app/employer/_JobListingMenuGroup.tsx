@@ -71,7 +71,7 @@ function JobListingMenuItem({ id, title, applicationCount }: JobListingProp) {
           <span className="truncate">{title}</span>
         </Link>
       </SidebarMenuSubButton>
-      {applicationCount === 0 && (
+      {applicationCount > 0 && (
         <div className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
           {applicationCount}
         </div>
