@@ -1,7 +1,7 @@
 import { EditIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 
 import { AsyncIf } from "@/components/AsyncIf";
 import { MarkdownPartial } from "@/components/markdown/MarkdownPartial";
@@ -95,19 +95,10 @@ function StatusUpdateButton({ status }: { status: JobListingStatus }) {
             return !isMaxed;
           }}
           otherwise={
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline">
-                  {statusToggleButtonText(status)}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="flex flex-col gap-2">
-                You must upgrade your plan to publish more job listings.
-                <Button asChild>
-                  <Link href="/employer/pricing">Upgrade Plan</Link>
-                </Button>
-              </PopoverContent>
-            </Popover>
+            <UpgradePopover
+              buttonText={statusToggleButtonText(status)}
+              popoverText="You must upgrade your plan to publish more job listings."
+            />
           }
         >
           {button}
@@ -116,6 +107,28 @@ function StatusUpdateButton({ status }: { status: JobListingStatus }) {
         button
       )}
     </AsyncIf>
+  );
+}
+
+function UpgradePopover({
+  buttonText,
+  popoverText,
+}: {
+  buttonText: ReactNode;
+  popoverText: ReactNode;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline">{buttonText}</Button>
+      </PopoverTrigger>
+      <PopoverContent className="flex flex-col gap-2">
+        {popoverText}
+        <Button asChild>
+          <Link href="/employer/pricing">Upgrade Plan</Link>
+        </Button>
+      </PopoverContent>
+    </Popover>
   );
 }
 
