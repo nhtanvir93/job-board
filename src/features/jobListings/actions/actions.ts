@@ -11,7 +11,10 @@ import {
   insertJobListing,
   updateJobListing as updateJobListingDB,
 } from "../db/jobListings";
-import { hasReachedMaxFeaturedJobListings } from "../lib/planFeatureHelpers";
+import {
+  hasReachedMaxFeaturedJobListings,
+  hasReachedMaxPublishedJobListings,
+} from "../lib/planFeatureHelpers";
 import { getNextJobListingStatus } from "../lib/utils";
 import { jobListingSchema } from "./schema";
 
@@ -88,7 +91,7 @@ export async function updateJobListing(
 export async function toggleJobListingStatus(id: string) {
   const error = {
     error: true,
-    message: "You don't have permission to update this job listing",
+    message: "You don't have permission to update this job listing's status",
   };
   const organization = await getCurrentOrganization();
 
@@ -111,7 +114,7 @@ export async function toggleJobListingStatus(id: string) {
   const newStatus = getNextJobListingStatus(jobListing.status);
   if (
     !(await hasOrgUserPermission("org:job_listings:change_status")) ||
-    (newStatus === "published" && (await hasReachedMaxFeaturedJobListings()))
+    (newStatus === "published" && (await hasReachedMaxPublishedJobListings()))
   ) {
     return error;
   }
@@ -123,6 +126,45 @@ export async function toggleJobListingStatus(id: string) {
         ? new Date()
         : undefined,
     status: newStatus,
+  });
+
+  return { error: false };
+}
+
+export async function toggleJobListingFeatured(id: string) {
+  const error = {
+    error: true,
+    message:
+      "You don't have permission to update this job listing's featured status",
+  };
+  const organization = await getCurrentOrganization();
+
+  if (
+    !organization ||
+    !(await hasOrgUserPermission("org:job_listings:update"))
+  ) {
+    return error;
+  }
+
+  const jobListing = await findJobListing(id, organization.id);
+
+  if (!jobListing) {
+    return {
+      error: true,
+      message: "No job listing found for update",
+    };
+  }
+
+  const newFeaturedStatus = !jobListing.isFeatured;
+  if (
+    !(await hasOrgUserPermission("org:job_listings:change_status")) ||
+    (newFeaturedStatus === true && (await hasReachedMaxFeaturedJobListings()))
+  ) {
+    return error;
+  }
+
+  await updateJobListingDB(id, {
+    isFeatured: newFeaturedStatus,
   });
 
   return { error: false };

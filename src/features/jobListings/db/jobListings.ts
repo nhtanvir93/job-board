@@ -5,9 +5,10 @@ import { db } from "@/drizzle/db";
 import { JobListingTable } from "@/drizzle/schema";
 
 import {
-  getJobListingCountOrganizationTag,
+  getJobListingFeaturedCountOrganizationTag,
   getJobListingIdTag,
   getJobListingLatestOrganizationTag,
+  getJobListingPublishedCountOrganizationTag,
   revalidateJobListingCache,
 } from "./cache/jobListings";
 
@@ -72,7 +73,7 @@ export async function findJobListing(id: string, organizationId: string) {
 
 export async function getPublishedJobListingCount(organizationId: string) {
   "use cache";
-  cacheTag(getJobListingCountOrganizationTag(organizationId));
+  cacheTag(getJobListingPublishedCountOrganizationTag(organizationId));
 
   const [result] = await db
     .select({ count: count() })
@@ -81,6 +82,23 @@ export async function getPublishedJobListingCount(organizationId: string) {
       and(
         eq(JobListingTable.organizationId, organizationId),
         eq(JobListingTable.status, "published"),
+      ),
+    );
+
+  return result?.count ?? 0;
+}
+
+export async function getFeaturedJobListingCount(organizationId: string) {
+  "use cache";
+  cacheTag(getJobListingFeaturedCountOrganizationTag(organizationId));
+
+  const [result] = await db
+    .select({ count: count() })
+    .from(JobListingTable)
+    .where(
+      and(
+        eq(JobListingTable.organizationId, organizationId),
+        eq(JobListingTable.isFeatured, true),
       ),
     );
 

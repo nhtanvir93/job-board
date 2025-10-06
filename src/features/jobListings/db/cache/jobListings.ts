@@ -24,8 +24,16 @@ export function getJobListingLatestOrganizationTag(organizationId: string) {
   return getLatestOrganizationTag("jobListings", organizationId);
 }
 
-export function getJobListingCountOrganizationTag(organizationId: string) {
-  return getCountOrganizationTag("jobListings", organizationId);
+export function getJobListingPublishedCountOrganizationTag(
+  organizationId: string,
+) {
+  return getCountOrganizationTag("jobListings", organizationId, ["published"]);
+}
+
+export function getJobListingFeaturedCountOrganizationTag(
+  organizationId: string,
+) {
+  return getCountOrganizationTag("jobListings", organizationId, ["featured"]);
 }
 
 export function revalidateJobListingCache(id: string, organizationId: string) {

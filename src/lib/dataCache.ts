@@ -22,8 +22,16 @@ export function getLatestOrganizationTag(
   return `organization:${organizationId}-${tag}:latest` as const;
 }
 
-export function getCountOrganizationTag(tag: CacheTag, organizationId: string) {
-  return `organization:${organizationId}-${tag}:count` as const;
+export function getCountOrganizationTag(
+  tag: CacheTag,
+  organizationId: string,
+  subTags?: string[],
+) {
+  if (!subTags) {
+    return `organization:${organizationId}-${tag}:count` as const;
+  }
+
+  return `organization:${organizationId}-${tag}(${subTags.join(",")}):count` as const;
 }
 
 export function getIdTag(tag: CacheTag, id: string) {
