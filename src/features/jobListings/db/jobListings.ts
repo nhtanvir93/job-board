@@ -2,12 +2,14 @@ import { and, count, desc, eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 import { db } from "@/drizzle/db";
-import { JobListingTable } from "@/drizzle/schema";
+import { JobListingApplicationTable, JobListingTable } from "@/drizzle/schema";
+import { getJobListingApplicationJobListingTag } from "@/features/jobListingApplications/db/cache/jobListingApplications";
 
 import {
   getJobListingFeaturedCountOrganizationTag,
   getJobListingIdTag,
   getJobListingLatestOrganizationTag,
+  getJobListingOrganizationTag,
   getJobListingPublishedCountOrganizationTag,
   revalidateJobListingCache,
 } from "./cache/jobListings";
@@ -117,4 +119,31 @@ export async function deleteJobListing(id: string) {
     deletedJobListing.id,
     deletedJobListing.organizationId,
   );
+}
+
+export async function getJobListings(orgId: string) {
+  "use cache";
+  cacheTag(getJobListingOrganizationTag(orgId));
+
+  const data = await db
+    .select({
+      applicationCount: count(JobListingApplicationTable.userId),
+      id: JobListingTable.id,
+      status: JobListingTable.status,
+      title: JobListingTable.title,
+    })
+    .from(JobListingTable)
+    .where(eq(JobListingTable.organizationId, orgId))
+    .leftJoin(
+      JobListingApplicationTable,
+      eq(JobListingApplicationTable.jobListingId, JobListingTable.id),
+    )
+    .groupBy(JobListingApplicationTable.jobListingId, JobListingTable.id)
+    .orderBy(desc(JobListingTable.createdAt));
+
+  data.forEach((jobListing) => {
+    cacheTag(getJobListingApplicationJobListingTag(jobListing.id));
+  });
+
+  return data;
 }

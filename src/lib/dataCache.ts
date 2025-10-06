@@ -15,6 +15,10 @@ export function getOrganizationTag(tag: CacheTag, organizationId: string) {
   return `organization:${organizationId}-${tag}` as const;
 }
 
+export function getJobListingIdTag(tag: CacheTag, jobListingId: string) {
+  return `jobListing:${jobListingId}-${tag}` as const;
+}
+
 export function getLatestOrganizationTag(
   tag: CacheTag,
   organizationId: string,
