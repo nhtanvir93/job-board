@@ -178,8 +178,12 @@ export async function deleteJobListing(id: string) {
   };
 
   const organization = await getCurrentOrganization();
-  if (!organization || !(await hasOrgUserPermission("org:job_listings:delete")))
+  if (
+    !organization ||
+    !(await hasOrgUserPermission("org:job_listings:delete"))
+  ) {
     return error;
+  }
 
   const jobListing = await findJobListing(id, organization.id);
   if (!jobListing) {
