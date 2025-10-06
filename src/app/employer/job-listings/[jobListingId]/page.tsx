@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import { AsyncIf } from "@/components/AsyncIf";
 import { MarkdownPartial } from "@/components/markdown/MarkdownPartial";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ import JobListingBadges from "@/features/jobListings/components/JobListingBadges
 import { findJobListing } from "@/features/jobListings/db/jobListings";
 import { formatJobListingStatus } from "@/features/jobListings/lib/formatters";
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
+import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
 
 interface Props {
   params: Promise<{ jobListingId: string }>;
@@ -40,12 +42,16 @@ const JobListingPageSuspense = async ({ params }: Props) => {
         <JobListingBadges jobListing={jobListing} />
       </div>
       <div className="flex items-center gap-2 empty:-mt-4">
-        <Button asChild variant="outline">
-          <Link href={`/employer/job-listings/${jobListing.id}/edit`}>
-            <EditIcon className="size-4" />
-            Edit
-          </Link>
-        </Button>
+        <AsyncIf
+          condition={() => hasOrgUserPermission("org:job_listings:update")}
+        >
+          <Button asChild variant="outline">
+            <Link href={`/employer/job-listings/${jobListing.id}/edit`}>
+              <EditIcon className="size-4" />
+              Edit
+            </Link>
+          </Button>
+        </AsyncIf>
       </div>
       <MarkdownPartial
         dialogMarkdown={
