@@ -4,8 +4,10 @@ import { redirect } from "next/navigation";
 import z from "zod";
 
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
+import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
 
 import {
+  findJobListing,
   insertJobListing,
   updateJobListing as updateJobListingDB,
 } from "../db/jobListings";
@@ -16,7 +18,10 @@ export async function createJobListing(
 ) {
   const organization = await getCurrentOrganization();
 
-  if (!organization) {
+  if (
+    !organization ||
+    !(await hasOrgUserPermission("org:job_listings:create"))
+  ) {
     return {
       error: true,
       message: "You don't have permission to create a job listing",
@@ -46,10 +51,13 @@ export async function updateJobListing(
 ) {
   const organization = await getCurrentOrganization();
 
-  if (!organization) {
+  if (
+    !organization ||
+    !(await hasOrgUserPermission("org:job_listings:update"))
+  ) {
     return {
       error: true,
-      message: "You don't have permission to create a job listing",
+      message: "You don't have permission to update this job listing",
     };
   }
 
@@ -58,6 +66,15 @@ export async function updateJobListing(
     return {
       error: true,
       message: "There was an error validating your job listing data",
+    };
+  }
+
+  const jobListing = await findJobListing(id, organization.id);
+
+  if (!jobListing) {
+    return {
+      error: true,
+      message: "No job listing found for update",
     };
   }
 
