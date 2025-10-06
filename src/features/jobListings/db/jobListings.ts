@@ -1,18 +1,19 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 import { db } from "@/drizzle/db";
 import { JobListingTable } from "@/drizzle/schema";
 
 import {
+  getJobListingCountOrganizationTag,
   getJobListingIdTag,
-  getJobListingOrganizationTag,
+  getJobListingLatestOrganizationTag,
   revalidateJobListingCache,
 } from "./cache/jobListings";
 
 export async function getMostRecentJobListingId(organizationId: string) {
   "use cache";
-  cacheTag(getJobListingOrganizationTag(organizationId));
+  cacheTag(getJobListingLatestOrganizationTag(organizationId));
 
   return db.query.JobListingTable.findFirst({
     columns: { id: true },
@@ -67,4 +68,21 @@ export async function findJobListing(id: string, organizationId: string) {
       eq(JobListingTable.organizationId, organizationId),
     ),
   });
+}
+
+export async function getPublishedJobListingCount(organizationId: string) {
+  "use cache";
+  cacheTag(getJobListingCountOrganizationTag(organizationId));
+
+  const [result] = await db
+    .select({ count: count() })
+    .from(JobListingTable)
+    .where(
+      and(
+        eq(JobListingTable.organizationId, organizationId),
+        eq(JobListingTable.status, "published"),
+      ),
+    );
+
+  return result?.count ?? 0;
 }
