@@ -11,6 +11,8 @@ import {
   insertJobListing,
   updateJobListing as updateJobListingDB,
 } from "../db/jobListings";
+import { hasReachedMaxFeaturedJobListings } from "../lib/planFeatureHelpers";
+import { getNextJobListingStatus } from "../lib/utils";
 import { jobListingSchema } from "./schema";
 
 export async function createJobListing(
@@ -81,4 +83,47 @@ export async function updateJobListing(
   const updatedJobListing = await updateJobListingDB(id, data);
 
   redirect(`/employer/job-listings/${updatedJobListing.id}`);
+}
+
+export async function toggleJobListingStatus(id: string) {
+  const error = {
+    error: true,
+    message: "You don't have permission to update this job listing",
+  };
+  const organization = await getCurrentOrganization();
+
+  if (
+    !organization ||
+    !(await hasOrgUserPermission("org:job_listings:update"))
+  ) {
+    return error;
+  }
+
+  const jobListing = await findJobListing(id, organization.id);
+
+  if (!jobListing) {
+    return {
+      error: true,
+      message: "No job listing found for update",
+    };
+  }
+
+  const newStatus = getNextJobListingStatus(jobListing.status);
+  if (
+    !(await hasOrgUserPermission("org:job_listings:change_status")) ||
+    (newStatus === "published" && (await hasReachedMaxFeaturedJobListings()))
+  ) {
+    return error;
+  }
+
+  await updateJobListingDB(id, {
+    isFeatured: newStatus === "published" ? undefined : false,
+    postedAt:
+      newStatus === "published" && jobListing.postedAt === null
+        ? new Date()
+        : undefined,
+    status: newStatus,
+  });
+
+  return { error: false };
 }

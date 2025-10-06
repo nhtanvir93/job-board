@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReactNode, Suspense } from "react";
 
+import ActionButton from "@/components/ActionButton";
 import { AsyncIf } from "@/components/AsyncIf";
 import { MarkdownPartial } from "@/components/markdown/MarkdownPartial";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
@@ -14,6 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { JobListingStatus } from "@/drizzle/schema";
+import { toggleJobListingStatus } from "@/features/jobListings/actions/actions";
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
 import { findJobListing } from "@/features/jobListings/db/jobListings";
 import { formatJobListingStatus } from "@/features/jobListings/lib/formatters";
@@ -60,7 +62,7 @@ const JobListingPageSuspense = async ({ params }: Props) => {
             </Link>
           </Button>
         </AsyncIf>
-        <StatusUpdateButton status={jobListing.status} />
+        <StatusUpdateButton status={jobListing.status} id={jobListing.id} />
       </div>
       <MarkdownPartial
         dialogMarkdown={
@@ -81,8 +83,23 @@ const JobListingPageSuspense = async ({ params }: Props) => {
   );
 };
 
-function StatusUpdateButton({ status }: { status: JobListingStatus }) {
-  const button = <Button variant="outline">Toggle</Button>;
+function StatusUpdateButton({
+  status,
+  id,
+}: {
+  status: JobListingStatus;
+  id: string;
+}) {
+  const button = (
+    <ActionButton
+      variant="outline"
+      action={toggleJobListingStatus.bind(null, id)}
+      requireConfirmation={getNextJobListingStatus(status) === "published"}
+      confirmationMessage="This will immediately show this job listing to all users."
+    >
+      {statusToggleButtonText(status)}
+    </ActionButton>
+  );
 
   return (
     <AsyncIf
