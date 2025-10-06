@@ -7,6 +7,7 @@ import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
 import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
 
 import {
+  deleteJobListing as deleteJobListingDB,
   findJobListing,
   insertJobListing,
   updateJobListing as updateJobListingDB,
@@ -107,7 +108,7 @@ export async function toggleJobListingStatus(id: string) {
   if (!jobListing) {
     return {
       error: true,
-      message: "No job listing found for update",
+      message: "No job listing found for update status",
     };
   }
 
@@ -151,7 +152,7 @@ export async function toggleJobListingFeatured(id: string) {
   if (!jobListing) {
     return {
       error: true,
-      message: "No job listing found for update",
+      message: "No job listing found for update featured status",
     };
   }
 
@@ -168,4 +169,27 @@ export async function toggleJobListingFeatured(id: string) {
   });
 
   return { error: false };
+}
+
+export async function deleteJobListing(id: string) {
+  const error = {
+    error: true,
+    message: "You don't have permission to delete this job listing",
+  };
+
+  const organization = await getCurrentOrganization();
+  if (!organization || !(await hasOrgUserPermission("org:job_listings:delete")))
+    return error;
+
+  const jobListing = await findJobListing(id, organization.id);
+  if (!jobListing) {
+    return {
+      error: true,
+      message: "No job listing found for delete",
+    };
+  }
+
+  await deleteJobListingDB(id);
+
+  redirect("/employer");
 }

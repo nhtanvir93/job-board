@@ -4,6 +4,7 @@ import {
   EyeOffIcon,
   StarIcon,
   StarOffIcon,
+  Trash2Icon,
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/popover";
 import { JobListingStatus } from "@/drizzle/schema";
 import {
+  deleteJobListing,
   toggleJobListingFeatured,
   toggleJobListingStatus,
 } from "@/features/jobListings/actions/actions";
@@ -81,6 +83,18 @@ const JobListingPageSuspense = async ({ params }: Props) => {
             id={jobListing.id}
           />
         )}
+        <AsyncIf
+          condition={() => hasOrgUserPermission("org:job_listings:delete")}
+        >
+          <ActionButton
+            variant="destructive"
+            action={deleteJobListing.bind(null, jobListing.id)}
+            requireConfirmation
+          >
+            <Trash2Icon className="size-4" />
+            Delete
+          </ActionButton>
+        </AsyncIf>
       </div>
       <MarkdownPartial
         dialogMarkdown={

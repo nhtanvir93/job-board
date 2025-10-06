@@ -104,3 +104,17 @@ export async function getFeaturedJobListingCount(organizationId: string) {
 
   return result?.count ?? 0;
 }
+
+export async function deleteJobListing(id: string) {
+  const [deletedJobListing] = await db
+    .delete(JobListingTable)
+    .where(eq(JobListingTable.id, id))
+    .returning({
+      id: JobListingTable.id,
+      organizationId: JobListingTable.organizationId,
+    });
+  revalidateJobListingCache(
+    deletedJobListing.id,
+    deletedJobListing.organizationId,
+  );
+}
