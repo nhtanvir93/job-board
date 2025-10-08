@@ -114,11 +114,6 @@ async function JobListingDetails({
             )}
           </div>
           <div className="ml-auto flex items-center gap-4">
-            {jobListing.postedAt && (
-              <div className="text-sm text-muted-foreground @max-lg:hidden">
-                {jobListing.postedAt.toLocaleDateString()}
-              </div>
-            )}
             <Button size="icon" variant="outline" asChild>
               <Link
                 href={`/?${convertSearchParamsToString(await searchParams)}`}
