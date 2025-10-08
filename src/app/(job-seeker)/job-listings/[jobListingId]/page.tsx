@@ -134,7 +134,7 @@ async function JobListingDetails({
         </div>
       </div>
 
-      <MarkdownRenderer source={jobListing.description} />
+      <MarkdownRenderer source={jobListing.description} className="prose-sm" />
     </div>
   );
 }

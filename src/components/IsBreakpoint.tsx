@@ -31,6 +31,8 @@ function useIsBreakpoint(breakpoint: string) {
       { signal: controller.signal },
     );
 
+    setIsBreakpoint(media.matches);
+
     return () => controller.abort();
   }, [breakpoint]);
 
