@@ -40,4 +40,7 @@ export function revalidateJobListingCache(id: string, organizationId: string) {
   revalidateTag(getJobListingGlobalTag());
   revalidateTag(getJobListingIdTag(id));
   revalidateTag(getJobListingOrganizationTag(organizationId));
+  revalidateTag(getJobListingLatestOrganizationTag(organizationId));
+  revalidateTag(getJobListingPublishedCountOrganizationTag(organizationId));
+  revalidateTag(getJobListingFeaturedCountOrganizationTag(organizationId));
 }

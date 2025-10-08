@@ -1,6 +1,8 @@
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, ilike, or, SQL } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
+import z from "zod";
 
+import { jobListingSearchParamsSchema } from "@/app/(job-seeker)/_shared/JobListingItems";
 import { db } from "@/drizzle/db";
 import { JobListingApplicationTable, JobListingTable } from "@/drizzle/schema";
 import { getJobListingApplicationJobListingTag } from "@/features/jobListingApplications/db/cache/jobListingApplications";
@@ -146,4 +148,70 @@ export async function getJobListings(orgId: string) {
   });
 
   return data;
+}
+
+export async function getJobListingsWithFilter(
+  searchParams: z.infer<typeof jobListingSearchParamsSchema>,
+  jobListingId: string | undefined,
+) {
+  const whereConditions: SQL[] = [];
+
+  if (searchParams.title) {
+    whereConditions.push(
+      ilike(JobListingTable.title, `%${searchParams.title}%`),
+    );
+  }
+
+  if (searchParams.location) {
+    whereConditions.push(
+      eq(JobListingTable.locationRequirement, searchParams.location),
+    );
+  }
+
+  if (searchParams.city) {
+    whereConditions.push(ilike(JobListingTable.city, `%${searchParams.city}%`));
+  }
+
+  if (searchParams.state) {
+    whereConditions.push(
+      ilike(JobListingTable.stateAbbreviation, `%${searchParams.state}%`),
+    );
+  }
+
+  if (searchParams.experience) {
+    whereConditions.push(
+      eq(JobListingTable.experienceLevel, searchParams.experience),
+    );
+  }
+
+  if (searchParams.jobType) {
+    whereConditions.push(eq(JobListingTable.type, searchParams.jobType));
+  }
+
+  if (searchParams.jobIds) {
+    whereConditions.push(
+      or(...searchParams.jobIds.map((jobId) => eq(JobListingTable.id, jobId)))!,
+    );
+  }
+
+  return db.query.JobListingTable.findMany({
+    orderBy: [desc(JobListingTable.isFeatured), desc(JobListingTable.postedAt)],
+    where: or(
+      jobListingId
+        ? and(
+            eq(JobListingTable.id, jobListingId),
+            eq(JobListingTable.status, "published"),
+          )
+        : undefined,
+      and(eq(JobListingTable.status, "published"), ...whereConditions),
+    ),
+    with: {
+      organization: {
+        columns: {
+          imageUrl: true,
+          name: true,
+        },
+      },
+    },
+  });
 }
