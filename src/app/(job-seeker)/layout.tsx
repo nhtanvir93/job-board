@@ -8,17 +8,20 @@ import { ReactNode } from "react";
 
 import AppSidebar from "@/components/sidebar/AppSidebar";
 import SidebarNavMenuGroup from "@/components/sidebar/SidebarNavMenuGroup";
-import { SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
 import SidebarUserButton from "@/features/users/components/SidebarUserButton";
 
-const JobSeekerLayout = ({ children }: { children: ReactNode }) => {
+const JobSeekerLayout = ({
+  children,
+  sidebar,
+}: {
+  children: ReactNode;
+  sidebar: ReactNode;
+}) => {
   return (
     <AppSidebar
       content={
         <>
-          <SidebarGroup>
-            <SidebarGroupLabel>Job Listings</SidebarGroupLabel>
-          </SidebarGroup>
+          {sidebar}
           <SidebarNavMenuGroup
             items={[
               {
