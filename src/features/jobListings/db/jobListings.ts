@@ -6,6 +6,7 @@ import { jobListingSearchParamsSchema } from "@/app/(job-seeker)/_shared/JobList
 import { db } from "@/drizzle/db";
 import { JobListingApplicationTable, JobListingTable } from "@/drizzle/schema";
 import { getJobListingApplicationJobListingTag } from "@/features/jobListingApplications/db/cache/jobListingApplications";
+import { getOrganizationIdTag } from "@/features/organizations/db/cache/organizations";
 
 import {
   getJobListingFeaturedCountOrganizationTag,
@@ -61,6 +62,33 @@ export async function updateJobListing(
   );
 
   return updatedJobListing;
+}
+
+export async function findJobListingById(id: string) {
+  "use cache";
+  cacheTag(getJobListingIdTag(id));
+
+  const data = await db.query.JobListingTable.findFirst({
+    where: and(
+      eq(JobListingTable.id, id),
+      eq(JobListingTable.status, "published"),
+    ),
+    with: {
+      organization: {
+        columns: {
+          id: true,
+          imageUrl: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (data) {
+    cacheTag(getOrganizationIdTag(data.organization.id));
+  }
+
+  return data;
 }
 
 export async function findJobListing(id: string, organizationId: string) {
@@ -154,6 +182,8 @@ export async function getJobListingsWithFilter(
   searchParams: z.infer<typeof jobListingSearchParamsSchema>,
   jobListingId: string | undefined,
 ) {
+  "use cache";
+
   const whereConditions: SQL[] = [];
 
   if (searchParams.title) {
@@ -194,7 +224,7 @@ export async function getJobListingsWithFilter(
     );
   }
 
-  return db.query.JobListingTable.findMany({
+  const data = await db.query.JobListingTable.findMany({
     orderBy: [desc(JobListingTable.isFeatured), desc(JobListingTable.postedAt)],
     where: or(
       jobListingId
@@ -208,10 +238,17 @@ export async function getJobListingsWithFilter(
     with: {
       organization: {
         columns: {
+          id: true,
           imageUrl: true,
           name: true,
         },
       },
     },
   });
+
+  data.forEach((jobListing) => {
+    cacheTag(getOrganizationIdTag(jobListing.organization.id));
+  });
+
+  return data;
 }
