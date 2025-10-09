@@ -1,5 +1,12 @@
+import { Metadata } from "next";
+
 import { Card, CardContent } from "@/components/ui/card";
 import JobListingForm from "@/features/jobListings/components/JobListingForm";
+
+export const metadata: Metadata = {
+  description: "Employer can create a new job circular.",
+  title: "Create Job Circular | Job Board",
+};
 
 const NewJobListingPage = () => {
   return (

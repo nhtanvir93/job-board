@@ -1,8 +1,15 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { getMostRecentJobListingId } from "@/features/jobListings/db/jobListings";
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
+
+export const metadata: Metadata = {
+  description:
+    "Employer can create, update, delete and change status like DRAFT, PUBLISHED, DELISTED, FEATURED.",
+  title: "Employer Dashboard | Job Board",
+};
 
 const EmployerHomePage = () => {
   return (

@@ -1,5 +1,11 @@
 import { OrganizationList } from "@clerk/nextjs";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  description: "User can switch to a different organization.",
+  title: "Switch Organization | Job Board",
+};
 
 interface Props {
   searchParams: Promise<{ redirect?: string }>;

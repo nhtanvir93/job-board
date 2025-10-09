@@ -1,4 +1,5 @@
 import { XIcon } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -20,6 +21,11 @@ import { convertSearchParamsToString } from "@/lib/convertSearchParamsToString";
 
 import JobListingItems from "../../_shared/JobListingItems";
 import ClientSheet from "./_ClientSheet";
+
+export const metadata: Metadata = {
+  description: "Anyone can go through a particular job details and drop CV.",
+  title: "Job Details | Job Board",
+};
 
 interface Props {
   params: Promise<{ jobListingId: string }>;

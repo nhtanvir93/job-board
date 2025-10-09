@@ -1,4 +1,11 @@
+import { Metadata } from "next";
+
 import JobListingItems from "./_shared/JobListingItems";
+
+export const metadata: Metadata = {
+  description: "Anyone can view all published job circulars.",
+  title: "Published Job Circulars | Job Board",
+};
 
 const JobSeekerHomePage = ({
   searchParams,
