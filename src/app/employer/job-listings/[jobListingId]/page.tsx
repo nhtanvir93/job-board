@@ -6,6 +6,7 @@ import {
   StarOffIcon,
   Trash2Icon,
 } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReactNode, Suspense } from "react";
@@ -37,6 +38,25 @@ import {
 import { getNextJobListingStatus } from "@/features/jobListings/lib/utils";
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
 import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ jobListingId: string }>;
+}): Promise<Metadata> {
+  const organization = await getCurrentOrganization();
+  if (!organization) return { title: "Job Not Found | Job Board" };
+
+  const { jobListingId } = await params;
+  const jobListing = await findJobListing(jobListingId, organization.id);
+
+  if (!jobListing) return { title: "Job Not Found | Job Board" };
+
+  return {
+    description: jobListing.description.slice(0, 150) + "...",
+    title: `${jobListing.title} | ${jobListing.organization.name}`,
+  };
+}
 
 interface Props {
   params: Promise<{ jobListingId: string }>;

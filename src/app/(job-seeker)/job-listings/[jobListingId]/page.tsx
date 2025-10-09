@@ -22,14 +22,25 @@ import { convertSearchParamsToString } from "@/lib/convertSearchParamsToString";
 import JobListingItems from "../../_shared/JobListingItems";
 import ClientSheet from "./_ClientSheet";
 
-export const metadata: Metadata = {
-  description: "Anyone can go through a particular job details and drop CV.",
-  title: "Job Details | Job Board",
-};
-
 interface Props {
   params: Promise<{ jobListingId: string }>;
   searchParams: Promise<Record<string, string | string[]>>;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ jobListingId: string }>;
+}): Promise<Metadata> {
+  const { jobListingId } = await params;
+  const jobListing = await findJobListingById(jobListingId);
+
+  if (!jobListing) return { title: "Job Not Found | Job Board" };
+
+  return {
+    description: jobListing.description.slice(0, 150) + "...",
+    title: `${jobListing.title} | ${jobListing.organization.name}`,
+  };
 }
 
 const JobListingPage = ({ params, searchParams }: Props) => {

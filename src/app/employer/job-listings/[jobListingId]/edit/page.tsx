@@ -1,9 +1,29 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { Card, CardContent } from "@/components/ui/card";
 import JobListingForm from "@/features/jobListings/components/JobListingForm";
 import { findJobListing } from "@/features/jobListings/db/jobListings";
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ jobListingId: string }>;
+}): Promise<Metadata> {
+  const organization = await getCurrentOrganization();
+  if (!organization) return { title: "Job Not Found | Job Board" };
+
+  const { jobListingId } = await params;
+  const jobListing = await findJobListing(jobListingId, organization.id);
+
+  if (!jobListing) return { title: "Job Not Found | Job Board" };
+
+  return {
+    description: jobListing.description.slice(0, 150) + "...",
+    title: `Edit ${jobListing.title} | ${jobListing.organization.name}`,
+  };
+}
 
 interface Props {
   params: Promise<{ jobListingId: string }>;

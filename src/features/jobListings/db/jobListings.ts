@@ -100,6 +100,14 @@ export async function findJobListing(id: string, organizationId: string) {
       eq(JobListingTable.id, id),
       eq(JobListingTable.organizationId, organizationId),
     ),
+    with: {
+      organization: {
+        columns: {
+          id: true,
+          name: true
+        }
+      }
+    }
   });
 }
 
