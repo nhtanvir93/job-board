@@ -10,6 +10,11 @@ import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
@@ -18,6 +23,8 @@ import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
 import { findJobListingById } from "@/features/jobListings/db/jobListings";
 import { convertSearchParamsToString } from "@/lib/convertSearchParamsToString";
+import { SignUpButton } from "@/services/clerk/components/AuthButtons";
+import { getCurrentUser } from "@/services/clerk/lib/getCurrentAuth";
 
 import JobListingItems from "../../_shared/JobListingItems";
 import ClientSheet from "./_ClientSheet";
@@ -144,11 +151,32 @@ async function JobListingDetails({
         <div className="flex flex-wrap gap-2 mt-2">
           <JobListingBadges jobListing={jobListing} />
         </div>
+        <Suspense fallback={<Button disabled>Apply</Button>}>
+          <Applybutton jobListingId={jobListing.id} />
+        </Suspense>
       </div>
 
       <MarkdownRenderer source={jobListing.description} className="prose-sm" />
     </div>
   );
+}
+
+async function Applybutton({ jobListingId }: { jobListingId: string }) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button>Apply</Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col gap-2">
+          You need to create an account before applying for a job.
+          <SignUpButton />
+        </PopoverContent>
+      </Popover>
+    );
+  }
 }
 
 export default JobListingPage;
