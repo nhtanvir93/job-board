@@ -104,10 +104,10 @@ export async function findJobListing(id: string, organizationId: string) {
       organization: {
         columns: {
           id: true,
-          name: true
-        }
-      }
-    }
+          name: true,
+        },
+      },
+    },
   });
 }
 
