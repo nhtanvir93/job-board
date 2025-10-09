@@ -1,7 +1,10 @@
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { differenceInDays } from "date-fns";
 import { XIcon } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 
 import IsBreakpoint from "@/components/IsBreakpoint";
@@ -9,6 +12,13 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
@@ -20,8 +30,11 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { findJobListingApplication } from "@/features/jobListingApplications/db/jobListingApplications";
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
+import NewJobListingApplicationForm from "@/features/jobListings/components/NewJobListingApplicationForm";
 import { findJobListingById } from "@/features/jobListings/db/jobListings";
+import { findUserResumeByUserId } from "@/features/users/db/userResumes";
 import { convertSearchParamsToString } from "@/lib/convertSearchParamsToString";
 import { SignUpButton } from "@/services/clerk/components/AuthButtons";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentAuth";
@@ -177,6 +190,63 @@ async function Applybutton({ jobListingId }: { jobListingId: string }) {
       </Popover>
     );
   }
+
+  const application = await findJobListingApplication(jobListingId, user.id);
+
+  if (application) {
+    const formatter = new Intl.RelativeTimeFormat(undefined, {
+      numeric: "always",
+      style: "short",
+    });
+
+    await connection();
+    const difference = differenceInDays(application.createdAt, Date.now());
+
+    return (
+      <div className="text-muted-foreground text-sm">
+        You applied for this job{" "}
+        {difference === 0 ? "today" : formatter.format(difference, "days")}
+      </div>
+    );
+  }
+
+  const userResume = await findUserResumeByUserId(user.id);
+
+  if (!userResume) {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button>Apply</Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col gap-2">
+          You need to upload your resume before applying for a job.
+          <Button asChild>
+            <Link href="/user-settings/resume">Upload Resume</Link>
+          </Button>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Apply</Button>
+      </DialogTrigger>
+      <DialogContent className="md:max-w-3xl max-h[calc(100%-2rem)] overflow-hidden flex flex-col">
+        <DialogHeader>
+          <DialogTitle>Application</DialogTitle>
+          <DialogDescription>
+            Applying for a job cannot be undone and is something you can do once
+            per job lisitng.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex-1 overflow-y-auto">
+          <NewJobListingApplicationForm jobListingId={jobListingId} />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export default JobListingPage;
