@@ -23,5 +23,6 @@ export const env = createEnv({
     DB_PASSWORD: z.string().min(1),
     DB_PORT: z.string().min(1),
     DB_USER: z.string().min(1),
+    UPLOADTHING_TOKEN: z.string().min(1),
   },
 });

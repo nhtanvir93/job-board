@@ -9,12 +9,6 @@ import {
   revalidateUserResumeCache,
 } from "./cache/userResumes";
 
-export async function insertUserResume(
-  userResume: typeof UserResumeTable.$inferInsert,
-) {
-  await db.insert(UserResumeTable).values(userResume).onConflictDoNothing();
-}
-
 export async function updateUserResume(
   userId: string,
   userResume: Partial<typeof UserResumeTable.$inferInsert>,
@@ -38,4 +32,30 @@ export async function findUserResumeByUserId(userId: string) {
   return db.query.UserResumeTable.findFirst({
     where: eq(UserResumeTable.userId, userId),
   });
+}
+
+export async function upsertUserResume(
+  userId: string,
+  userResume: Omit<typeof UserResumeTable.$inferInsert, "userId">,
+) {
+  await db
+    .insert(UserResumeTable)
+    .values({ userId, ...userResume })
+    .onConflictDoUpdate({
+      set: userResume,
+      target: UserResumeTable.userId,
+    });
+
+  revalidateUserResumeCache(userId);
+}
+
+export async function getUserResumeFileKey(userId: string) {
+  const data = await db.query.UserResumeTable.findFirst({
+    columns: {
+      resumeFileKey: true,
+    },
+    where: eq(UserResumeTable.userId, userId),
+  });
+
+  return data?.resumeFileKey;
 }

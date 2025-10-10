@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 
 import ClerkProvider from "@/services/clerk/components/ClerkProvider";
+import { UploadThingSSR } from "@/services/uploadthing/components/UploadThingSSR";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -33,8 +34,9 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Toaster />
           {children}
+          <Toaster />
+          <UploadThingSSR />
         </body>
       </html>
     </ClerkProvider>
