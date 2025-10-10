@@ -30,13 +30,17 @@ export const JobListingApplicationTable = pgTable(
   {
     coverLetter: varchar(),
     createdAt,
-    jobListingId: uuid().references(() => JobListingTable.id, {
-      onDelete: "cascade",
-    }),
+    jobListingId: uuid()
+      .references(() => JobListingTable.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
     rating: integer(),
     stage: applicationStageEnum().notNull().default("applied"),
     updatedAt,
-    userId: varchar().references(() => UserTable.id, { onDelete: "cascade" }),
+    userId: varchar()
+      .references(() => UserTable.id, { onDelete: "cascade" })
+      .notNull(),
   },
   (table) => [primaryKey({ columns: [table.jobListingId, table.userId] })],
 );

@@ -4,7 +4,10 @@ import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { db } from "@/drizzle/db";
 import { JobListingApplicationTable } from "@/drizzle/schema";
 
-import { getJobListingApplicaitonIdTag } from "./cache/jobListingApplications";
+import {
+  getJobListingApplicaitonIdTag,
+  revalidateJobListingApplicationCache,
+} from "./cache/jobListingApplications";
 
 export async function findJobListingApplication(
   jobListingId: string,
@@ -19,4 +22,11 @@ export async function findJobListingApplication(
       eq(JobListingApplicationTable.userId, userId),
     ),
   });
+}
+
+export async function insertJobListingApplication(
+  jobListingApplication: typeof JobListingApplicationTable.$inferInsert,
+) {
+  await db.insert(JobListingApplicationTable).values(jobListingApplication);
+  revalidateJobListingApplicationCache(jobListingApplication);
 }

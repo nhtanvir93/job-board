@@ -10,9 +10,9 @@ import {
 } from "./cache/userResumes";
 
 export async function insertUserResume(
-  user: typeof UserResumeTable.$inferInsert,
+  userResume: typeof UserResumeTable.$inferInsert,
 ) {
-  await db.insert(UserResumeTable).values(user).onConflictDoNothing();
+  await db.insert(UserResumeTable).values(userResume).onConflictDoNothing();
 }
 
 export async function updateUserResume(

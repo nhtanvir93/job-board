@@ -64,6 +64,21 @@ export async function updateJobListing(
   return updatedJobListing;
 }
 
+export async function findPublicJobListing(id: string) {
+  "use cache";
+  cacheTag(getJobListingIdTag(id));
+
+  return await db.query.JobListingTable.findFirst({
+    columns: {
+      id: true,
+    },
+    where: and(
+      eq(JobListingTable.id, id),
+      eq(JobListingTable.status, "published"),
+    ),
+  });
+}
+
 export async function findJobListingById(id: string) {
   "use cache";
   cacheTag(getJobListingIdTag(id));

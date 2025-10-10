@@ -46,3 +46,10 @@ export const jobListingSchema = z
       path: ["stateAbbreviation"],
     },
   );
+
+export const newJobListingApplicationSchema = z.object({
+  coverLetter: z
+    .string()
+    .transform((value) => (value.trim() === "" ? null : value))
+    .nullable(),
+});

@@ -30,9 +30,9 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import NewJobListingApplicationForm from "@/features/jobListingApplications/components/NewJobListingApplicationForm";
 import { findJobListingApplication } from "@/features/jobListingApplications/db/jobListingApplications";
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
-import NewJobListingApplicationForm from "@/features/jobListings/components/NewJobListingApplicationForm";
 import { findJobListingById } from "@/features/jobListings/db/jobListings";
 import { findUserResumeByUserId } from "@/features/users/db/userResumes";
 import { convertSearchParamsToString } from "@/lib/convertSearchParamsToString";
@@ -233,7 +233,7 @@ async function Applybutton({ jobListingId }: { jobListingId: string }) {
       <DialogTrigger asChild>
         <Button>Apply</Button>
       </DialogTrigger>
-      <DialogContent className="md:max-w-3xl max-h[calc(100%-2rem)] overflow-hidden flex flex-col">
+      <DialogContent className="md:max-w-3xl max-h[calc(100%-2rem)] overflow-y-auto flex flex-col">
         <DialogHeader>
           <DialogTitle>Application</DialogTitle>
           <DialogDescription>
