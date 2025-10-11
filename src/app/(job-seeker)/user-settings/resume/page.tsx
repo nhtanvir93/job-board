@@ -71,14 +71,14 @@ async function AISummaryCard() {
   if (!userResume || (userResume && userResume.aiSummary === null)) return null;
 
   return (
-    <Card className="border-b">
+    <Card className="border-b p-4">
       <CardTitle>AI Summary</CardTitle>
       <CardDescription>
         This is an AI-generated summary of your resume. This is used by
         employers to quickly understand your qualifications and experience.
       </CardDescription>
       <CardContent>
-        <MarkdownRenderer className="prose-sm" source={userResume.aiSummary!} />
+        <MarkdownRenderer source={userResume.aiSummary!} />
       </CardContent>
     </Card>
   );

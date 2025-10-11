@@ -22,8 +22,8 @@ import type { ForwardedRef } from "react";
 import useIsDarkMode from "@/hooks/useIsDarkMode";
 import { cn } from "@/lib/utils";
 
-export const markdownClassNames =
-  "max-w-none prose prose-neutral dark:prose-invert font-sans";
+import { markdownClassNames } from "./MarkdownRenderer";
+
 
 export default function InitializedMDXEditor({
   editorRef,

@@ -3,7 +3,8 @@ import remarkGfm from "remark-gfm";
 
 import { cn } from "@/lib/utils";
 
-import { markdownClassNames } from "./_MarkdownEditor";
+export const markdownClassNames =
+  "max-w-none prose prose-neutral dark:prose-invert font-sans";
 
 const MarkdownRenderer = ({
   className,
