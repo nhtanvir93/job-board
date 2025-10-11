@@ -9,6 +9,7 @@ import {
   clerkUpdateOrganization,
   clerkUpdateUser,
 } from "@/services/inngest/functions/clerk";
+import { createAISummaryOfUploadedResume } from "@/services/inngest/functions/resume";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
@@ -19,5 +20,6 @@ export const { GET, POST, PUT } = serve({
     clerkCreateOrganization,
     clerkUpdateOrganization,
     clerkDeleteOrganization,
+    createAISummaryOfUploadedResume,
   ],
 });

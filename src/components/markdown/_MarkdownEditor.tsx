@@ -24,7 +24,6 @@ import { cn } from "@/lib/utils";
 
 import { markdownClassNames } from "./MarkdownRenderer";
 
-
 export default function InitializedMDXEditor({
   editorRef,
   className,
