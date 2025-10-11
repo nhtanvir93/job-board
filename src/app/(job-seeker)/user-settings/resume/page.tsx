@@ -46,7 +46,7 @@ async function ResumeDetails() {
   if (!user) return notFound();
 
   const userResume = await findUserResumeByUserId(user.id);
-  if (!userResume) return null;
+  if (!userResume?.resumeFileUrl) return null;
 
   return (
     <CardFooter>

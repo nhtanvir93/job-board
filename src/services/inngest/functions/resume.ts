@@ -1,6 +1,6 @@
 import {
   findUserResumeByUserId,
-  updateUserResume,
+  upsertUserResume,
 } from "@/features/users/db/userResumes";
 import {
   extractPdfContents,
@@ -23,10 +23,10 @@ export const createAISummaryOfUploadedResume = inngest.createFunction(
     const userResume = await step.run("get-user-resume", async () => {
       return findUserResumeByUserId(userId);
     });
-    if (!userResume) return;
+    if (!userResume?.resumeFileUrl) return;
 
     const result = await step.run("extract-pdf-content", async () => {
-      return extractPdfContents(userResume.resumeFileUrl);
+      return extractPdfContents(userResume.resumeFileUrl as string);
     });
     if (result.error) return;
 
@@ -39,7 +39,7 @@ export const createAISummaryOfUploadedResume = inngest.createFunction(
 
     const { aiSummary } = aiResult;
     await step.run("save-ai-summary", async () => {
-      return updateUserResume(userId, { aiSummary });
+      return upsertUserResume(userId, { aiSummary });
     });
   },
 );

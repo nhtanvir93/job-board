@@ -7,8 +7,8 @@ import { UserTable } from "./user";
 export const UserResumeTable = pgTable("user_resumes", {
   aiSummary: varchar(),
   createdAt,
-  resumeFileKey: varchar().notNull(),
-  resumeFileUrl: varchar().notNull(),
+  resumeFileKey: varchar(),
+  resumeFileUrl: varchar(),
   updatedAt,
   userId: varchar()
     .primaryKey()

@@ -9,17 +9,6 @@ import {
   revalidateUserResumeCache,
 } from "./cache/userResumes";
 
-export async function updateUserResume(
-  userId: string,
-  userResume: Partial<typeof UserResumeTable.$inferInsert>,
-) {
-  await db
-    .update(UserResumeTable)
-    .set(userResume)
-    .where(eq(UserResumeTable.userId, userId));
-  revalidateUserResumeCache(userId);
-}
-
 export async function deleteUserResume(userId: string) {
   await db.delete(UserResumeTable).where(eq(UserResumeTable.userId, userId));
   revalidateUserResumeCache(userId);
@@ -28,6 +17,8 @@ export async function deleteUserResume(userId: string) {
 export async function findUserResumeByUserId(userId: string) {
   "use cache";
   cacheTag(getUserResumeIdTag(userId));
+
+  console.log("findUserResumeByUserId");
 
   return db.query.UserResumeTable.findFirst({
     where: eq(UserResumeTable.userId, userId),
