@@ -9,7 +9,7 @@ const DropzoneClient = () => {
   return (
     <UploadDropzone
       endpoint="resumeUploader"
-      onClientUploadComplete={() => router.refresh()}
+      onClientUploadComplete={() => { router.refresh(); }}
     />
   );
 };

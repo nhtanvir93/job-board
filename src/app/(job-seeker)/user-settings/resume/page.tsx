@@ -48,6 +48,8 @@ async function ResumeDetails() {
   const userResume = await findUserResumeByUserId(user.id);
   if (!userResume?.resumeFileUrl) return null;
 
+  console.log("Client ResumeFileKey", userResume.resumeFileKey);
+
   return (
     <CardFooter>
       <Button asChild>

@@ -2,8 +2,8 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
 import {
-  getUserResumeFileKey,
-  upsertUserResume,
+  findUserResumeByUserId,
+  upsertUserResume
 } from "@/features/users/db/userResumes";
 
 import { getCurrentUser } from "../clerk/lib/getCurrentAuth";
@@ -33,15 +33,15 @@ export const customFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       const { userId } = metadata;
 
-      const resumeFileKey = await getUserResumeFileKey(userId);
+      const userResume = await findUserResumeByUserId(userId);
 
       await upsertUserResume(userId, {
         resumeFileKey: file.key,
         resumeFileUrl: file.ufsUrl,
       });
 
-      if (resumeFileKey) {
-        await uploadthing.deleteFiles(resumeFileKey);
+      if (userResume?.resumeFileKey) {
+        await uploadthing.deleteFiles(userResume?.resumeFileKey);
       }
 
       inngest.send({

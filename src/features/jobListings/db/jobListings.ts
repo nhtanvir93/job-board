@@ -108,7 +108,7 @@ export async function findJobListingById(id: string) {
 
 export async function findJobListing(id: string, organizationId: string) {
   "use cache";
-  cacheTag(getJobListingIdTag(id));
+  cacheTag(getJobListingIdTag(id)); console.log("New Job Listing");
 
   return db.query.JobListingTable.findFirst({
     where: and(
