@@ -3,9 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
 import { UserResumeTable } from "@/drizzle/schema";
 
-import {
-  revalidateUserResumeCache
-} from "./cache/userResumes";
+import { revalidateUserResumeCache } from "./cache/userResumes";
 
 export async function deleteUserResume(userId: string) {
   await db.delete(UserResumeTable).where(eq(UserResumeTable.userId, userId));

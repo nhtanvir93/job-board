@@ -3,7 +3,7 @@ import { UploadThingError } from "uploadthing/server";
 
 import {
   findUserResumeByUserId,
-  upsertUserResume
+  upsertUserResume,
 } from "@/features/users/db/userResumes";
 
 import { getCurrentUser } from "../clerk/lib/getCurrentAuth";

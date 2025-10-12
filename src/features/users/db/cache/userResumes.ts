@@ -2,8 +2,6 @@ import { revalidateTag } from "next/cache";
 
 import { getGlobalTag, getIdTag } from "@/lib/dataCache";
 
-
-
 export function getUserResumeGlobalTag() {
   return getGlobalTag("userResumes");
 }
