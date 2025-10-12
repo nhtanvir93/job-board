@@ -28,9 +28,7 @@ const ModifyBtnClient = () => {
 
     await revalidateUserResumeTest();
 
-    setRevalidating(true);
-
-    router.refresh();
+    setRevalidating(false);
   };
 
   return (
@@ -43,7 +41,7 @@ const ModifyBtnClient = () => {
       </Button>
       <Button
         variant="outline"
-        onClick={() => router.refresh()}
+        onClick={handleRevalidateUserResume}
         disabled={revalidating}
       >
         Revalidate
