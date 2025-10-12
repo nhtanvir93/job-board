@@ -3,7 +3,7 @@ import { UploadThingError } from "uploadthing/server";
 
 import {
   getUserResumeFileKey,
-  upsertUserResume
+  upsertUserResume,
 } from "@/features/users/db/userResumes";
 
 import { getCurrentUser } from "../clerk/lib/getCurrentAuth";
@@ -37,7 +37,7 @@ export const customFileRouter = {
 
       await upsertUserResume(userId, {
         resumeFileKey: file.key,
-        resumeFileUrl: file.ufsUrl
+        resumeFileUrl: file.ufsUrl,
       });
 
       if (resumeFileKey) {
@@ -54,7 +54,5 @@ export const customFileRouter = {
       return { message: "Resume uploaded successfully" };
     }),
 } satisfies FileRouter;
-
-
 
 export type CustomFileRouter = typeof customFileRouter;

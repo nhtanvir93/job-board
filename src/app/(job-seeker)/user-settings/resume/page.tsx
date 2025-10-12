@@ -47,7 +47,7 @@ async function SuspendedDropzoneClient() {
   const user = await getCurrentUser();
   if (!user) return notFound();
 
-  return <DropzoneClient userId={user.id} />
+  return <DropzoneClient userId={user.id} />;
 }
 
 async function ResumeDetails() {
