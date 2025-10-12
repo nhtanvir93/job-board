@@ -28,7 +28,9 @@ const UserResumePage = () => {
       <h1 className="text-2xl font-bold">Upload Your Resume</h1>
       <Card>
         <CardContent>
-          <DropzoneClient />
+          <Suspense>
+            <SuspendedDropzoneClient />
+          </Suspense>
         </CardContent>
         <Suspense>
           <ResumeDetails />
@@ -40,6 +42,13 @@ const UserResumePage = () => {
     </div>
   );
 };
+
+async function SuspendedDropzoneClient() {
+  const user = await getCurrentUser();
+  if (!user) return notFound();
+
+  return <DropzoneClient userId={user.id} />
+}
 
 async function ResumeDetails() {
   const user = await getCurrentUser();

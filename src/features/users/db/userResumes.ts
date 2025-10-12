@@ -6,7 +6,7 @@ import { UserResumeTable } from "@/drizzle/schema";
 
 import {
   getUserResumeIdTag,
-  revalidateUserResumeCache,
+  revalidateUserResumeCache
 } from "./cache/userResumes";
 
 export async function deleteUserResume(userId: string) {
