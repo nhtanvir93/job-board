@@ -212,7 +212,7 @@ async function Applybutton({ jobListingId }: { jobListingId: string }) {
 
   const userResume = await findUserResumeByUserId(user.id);
 
-  if (userResume) {
+  if (!userResume) {
     return (
       <Popover>
         <PopoverTrigger asChild>

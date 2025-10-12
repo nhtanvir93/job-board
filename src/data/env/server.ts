@@ -19,6 +19,7 @@ export const env = createEnv({
         ...rest,
         DATABASE_URL: `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
         GEMINI_FLASH_API: `${GEMINI_FLASH_API_PARTIAL}?key=${GEMINI_FLASH_API_KEY}`,
+        GEMINI_FLASH_API_KEY,
       };
     });
   },

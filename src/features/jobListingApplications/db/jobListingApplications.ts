@@ -30,3 +30,21 @@ export async function insertJobListingApplication(
   await db.insert(JobListingApplicationTable).values(jobListingApplication);
   revalidateJobListingApplicationCache(jobListingApplication);
 }
+
+export async function updateJobListingApplication(
+  { userId, jobListingId }: { userId: string; jobListingId: string },
+  jobListingApplication: Partial<
+    typeof JobListingApplicationTable.$inferInsert
+  >,
+) {
+  await db
+    .update(JobListingApplicationTable)
+    .set(jobListingApplication)
+    .where(
+      and(
+        eq(JobListingApplicationTable.jobListingId, jobListingId),
+        eq(JobListingApplicationTable.userId, userId),
+      ),
+    );
+  revalidateJobListingApplicationCache({ jobListingId, userId });
+}
