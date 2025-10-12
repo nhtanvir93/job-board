@@ -7,7 +7,6 @@ import {
 } from "@/features/users/db/userResumes";
 
 import { getCurrentUser } from "../clerk/lib/getCurrentAuth";
-import { inngest } from "../inngest/client";
 import { uploadthing } from "./client";
 
 const f = createUploadthing();
@@ -44,12 +43,12 @@ export const customFileRouter = {
         await uploadthing.deleteFiles(userResume?.resumeFileKey);
       }
 
-      inngest.send({
-        name: "app/resume:uploaded",
-        user: {
-          id: userId,
-        },
-      });
+      // inngest.send({
+      //   name: "app/resume:uploaded",
+      //   user: {
+      //     id: userId,
+      //   },
+      // });
 
       return { message: "Resume uploaded successfully" };
     }),

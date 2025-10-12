@@ -10,7 +10,7 @@ export function getUserResumeIdTag(userId: string) {
   return getIdTag("userResumes", userId);
 }
 
-export async function revalidateUserResumeCache(userId: string) {
+export function revalidateUserResumeCache(userId: string) {
   revalidateTag(getUserResumeGlobalTag());
   revalidateTag(getUserResumeIdTag(userId));
 }

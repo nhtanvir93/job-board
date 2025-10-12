@@ -1,9 +1,13 @@
 import { eq } from "drizzle-orm";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 import { db } from "@/drizzle/db";
 import { UserResumeTable } from "@/drizzle/schema";
 
-import { revalidateUserResumeCache } from "./cache/userResumes";
+import {
+  getUserResumeIdTag,
+  revalidateUserResumeCache,
+} from "./cache/userResumes";
 
 export async function deleteUserResume(userId: string) {
   await db.delete(UserResumeTable).where(eq(UserResumeTable.userId, userId));
@@ -11,8 +15,8 @@ export async function deleteUserResume(userId: string) {
 }
 
 export async function findUserResumeByUserId(userId: string) {
-  // "use cache";
-  // cacheTag(getUserResumeIdTag(userId));
+  "use cache";
+  cacheTag(getUserResumeIdTag(userId));
 
   return db.query.UserResumeTable.findFirst({
     where: eq(UserResumeTable.userId, userId),
