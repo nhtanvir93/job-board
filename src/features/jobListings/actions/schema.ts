@@ -53,3 +53,7 @@ export const newJobListingApplicationSchema = z.object({
     .transform((value) => (value.trim() === "" ? null : value))
     .nullable(),
 });
+
+export const jobListingAISearchSchema = z.object({
+  query: z.string().min(1, "Required"),
+});

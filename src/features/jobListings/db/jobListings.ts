@@ -10,6 +10,7 @@ import { getOrganizationIdTag } from "@/features/organizations/db/cache/organiza
 
 import {
   getJobListingFeaturedCountOrganizationTag,
+  getJobListingGlobalTag,
   getJobListingIdTag,
   getJobListingLatestOrganizationTag,
   getJobListingOrganizationTag,
@@ -275,4 +276,13 @@ export async function getJobListingsWithFilter(
   });
 
   return data;
+}
+
+export async function getPublicJobListings() {
+  "use cache";
+  cacheTag(getJobListingGlobalTag());
+
+  return db.query.JobListingTable.findMany({
+    where: eq(JobListingTable.status, "published"),
+  });
 }

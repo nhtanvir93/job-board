@@ -3,12 +3,17 @@
 import { redirect } from "next/navigation";
 import z from "zod";
 
-import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
+import {
+  getCurrentOrganization,
+  getCurrentUser,
+} from "@/services/clerk/lib/getCurrentAuth";
 import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
+import { getMatchedJobListings } from "@/services/inngest/ai/getMatchedJobListings";
 
 import {
   deleteJobListing as deleteJobListingDB,
   findJobListing,
+  getPublicJobListings,
   insertJobListing,
   updateJobListing as updateJobListingDB,
 } from "../db/jobListings";
@@ -17,7 +22,7 @@ import {
   hasReachedMaxPublishedJobListings,
 } from "../lib/planFeatureHelpers";
 import { getNextJobListingStatus } from "../lib/utils";
-import { jobListingSchema } from "./schema";
+import { jobListingAISearchSchema, jobListingSchema } from "./schema";
 
 export async function createJobListing(
   unsafeData: z.infer<typeof jobListingSchema>,
@@ -196,4 +201,46 @@ export async function deleteJobListing(id: string) {
   await deleteJobListingDB(id);
 
   redirect("/employer");
+}
+
+export async function getAIJobListingSearchResults(
+  unsafe: z.infer<typeof jobListingAISearchSchema>,
+): Promise<
+  { error: true; message: string } | { error: false; jobIds: string[] }
+> {
+  const { success, data } = jobListingAISearchSchema.safeParse(unsafe);
+
+  if (!success) {
+    return {
+      error: true,
+      message: "There was an error validating your search query",
+    };
+  }
+
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return {
+      error: true,
+      message: "You need an account to use AI job search",
+    };
+  }
+
+  const allJobListings = await getPublicJobListings();
+  const matchedJobListings = await getMatchedJobListings(
+    data.query,
+    allJobListings,
+    {
+      maxNumberOfJobs: 10,
+    },
+  );
+
+  if (matchedJobListings.length === 0) {
+    return {
+      error: true,
+      message: "No job matched your search criteria",
+    };
+  }
+
+  return { error: false, jobIds: matchedJobListings };
 }
