@@ -11,7 +11,6 @@ const RegenerateBtnClient = () => {
 
   async function handleClick() {
     const result = await generateNewRandomNumber();
-    console.log(result.message);
 
     router.refresh();
   }

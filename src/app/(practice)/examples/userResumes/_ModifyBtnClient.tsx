@@ -16,7 +16,6 @@ const ModifyBtnClient = () => {
     setLoading(true);
 
     const result = await upSertUserResumeTest();
-    console.log("Updated User Resume Columns", result.updatedColumns);
 
     setLoading(false);
 
