@@ -10,7 +10,7 @@ export function getUserNotificationSettingIdTag(id: string) {
   return getIdTag("userNotificationSettings", id);
 }
 
-export function revalidateUserCache(id: string) {
+export function revalidateUserNotificationSettingCache(id: string) {
   revalidateTag(getUserNotificationSettingGlobalTag());
   revalidateTag(getUserNotificationSettingIdTag(id));
 }

@@ -7,6 +7,7 @@ import {
   SettingsIcon,
   UserIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -58,8 +59,10 @@ export function SidebarUserButtonClient({ user }: { user: UserProfile }) {
         >
           <UserIcon className="mr-1" /> Profile
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <SettingsIcon className="mr-1" /> Settings
+        <DropdownMenuItem asChild>
+          <Link href="/user-settings/notifications">
+            <SettingsIcon className="mr-1" /> Settings
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={async () => await signOut({ redirectUrl: "/" })}
