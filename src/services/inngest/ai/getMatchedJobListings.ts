@@ -31,7 +31,7 @@ export async function getMatchedJobListings(
     maxNumberOfJobs,
   }: {
     maxNumberOfJobs?: number;
-  },
+  } = {},
 ) {
   const NO_JOBS = "NO_JOBS";
 

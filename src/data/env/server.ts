@@ -37,6 +37,7 @@ export const env = createEnv({
     GEMINI_FLASH_API_PARTIAL: z.string().min(1),
     PDF_CO_API: z.string().min(1),
     PDF_CO_API_KEY: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1),
     UPLOADTHING_TOKEN: z.string().min(1),
   },
 });
