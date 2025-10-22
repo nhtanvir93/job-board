@@ -2,6 +2,7 @@ import { subDays } from "date-fns";
 import { and, eq, gte } from "drizzle-orm";
 import { GetEvents } from "inngest";
 
+import { env } from "@/data/env/server";
 import { db } from "@/drizzle/db";
 import {
   JobListingTable,
@@ -95,7 +96,7 @@ export const prepareDailyUserJobListingNotifications = inngest.createFunction(
       >["app/email.daily-user-job-listings"];
     });
 
-    step.sendEvent("send-emails", events);
+    await step.sendEvent("send-emails", events);
   },
 );
 
@@ -130,6 +131,8 @@ export const sendDailyUserJobListingEmail = inngest.createFunction(
       );
     }
 
+    console.log("Matching Jobs", matchingJobListings);
+
     if (matchingJobListings.length === 0) {
       return;
     }
@@ -137,7 +140,11 @@ export const sendDailyUserJobListingEmail = inngest.createFunction(
     await step.run("send-email", async () => {
       await resend.emails.send({
         from: "Job Board <onboarding@resend.dev>",
-        react: DailyJobListingEmail(),
+        react: DailyJobListingEmail({
+          jobListings,
+          serverUrl: env.SERVER_URL,
+          userName: user.name,
+        }),
         subject: "Daily Job Listings",
         to: user.email,
       });

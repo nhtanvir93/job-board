@@ -9,6 +9,10 @@ import {
   clerkUpdateOrganization,
   clerkUpdateUser,
 } from "@/services/inngest/functions/clerk";
+import {
+  prepareDailyUserJobListingNotifications,
+  sendDailyUserJobListingEmail,
+} from "@/services/inngest/functions/email";
 import { rankApplication } from "@/services/inngest/functions/jobListingApplication";
 import { createAISummaryOfUploadedResume } from "@/services/inngest/functions/resume";
 
@@ -23,5 +27,7 @@ export const { GET, POST, PUT } = serve({
     clerkDeleteOrganization,
     createAISummaryOfUploadedResume,
     rankApplication,
+    prepareDailyUserJobListingNotifications,
+    sendDailyUserJobListingEmail,
   ],
 });
