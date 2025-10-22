@@ -131,8 +131,6 @@ export const sendDailyUserJobListingEmail = inngest.createFunction(
       );
     }
 
-    console.log("Matching Jobs", matchingJobListings);
-
     if (matchingJobListings.length === 0) {
       return;
     }
