@@ -36,6 +36,13 @@
       "when": 1760180239198,
       "tag": "0004_shocking_sersi",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1761191830666,
+      "tag": "0005_stormy_moonstone",
+      "breakpoints": true
     }
   ]
 }
