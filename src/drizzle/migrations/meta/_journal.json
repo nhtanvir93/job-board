@@ -43,6 +43,13 @@
       "when": 1761191830666,
       "tag": "0005_stormy_moonstone",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1761276359641,
+      "tag": "0006_gorgeous_sleeper",
+      "breakpoints": true
     }
   ]
 }

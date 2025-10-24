@@ -1,0 +1,1 @@
+ALTER TABLE "organization_user_settings" ADD COLUMN "aiPrompt" varchar;

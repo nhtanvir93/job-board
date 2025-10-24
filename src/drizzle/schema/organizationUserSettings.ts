@@ -14,6 +14,7 @@ import { UserTable } from "./user";
 export const OrganizationUserSettingsTable = pgTable(
   "organization_user_settings",
   {
+    aiPrompt: varchar(),
     createdAt,
     minimumRating: integer(),
     newApplicationEmailNotifications: boolean().notNull().default(false),
